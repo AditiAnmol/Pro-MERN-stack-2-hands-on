@@ -4,7 +4,7 @@ class IssueRow extends React.Component {
         return (
             <tr>
                 <td style={style}>{this.props.issue_id}</td>
-                <td style={style}>{this.props.issue_title}</td>
+                <td style={style}>{this.props.children}</td>
             </tr>
         )
     }
@@ -30,8 +30,8 @@ class IssueTable extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    <IssueRow rowStyle={rowStyle} issue_id={1} issue_title="Error on console when clicking Add"/>
-                    <IssueRow rowStyle={rowStyle} issue_id={2} issue_title="Missing bottom border on panel"/>
+                    <IssueRow rowStyle={rowStyle} issue_id={1}>Error on console when clicking <i>Add</i></IssueRow>
+                    <IssueRow rowStyle={rowStyle} issue_id={2}>Missing <b>bottom</b> border on panel</IssueRow>
                 </tbody>
                 {/* <div>This is the placeholder for table of issues.</div> */}
             </table>

@@ -1,4 +1,4 @@
-const issues = [
+const initialIssues = [
     {id: 1, status: 'New', owner: 'Raven', effort: 5, 
     created: new Date('2021-02-12'), due: undefined, 
     title: 'Error on console when clicking Add'},
@@ -7,10 +7,15 @@ const issues = [
     title: 'Missing bottom border on panel'},
 ];
 
+const sampleIssues = {
+    status: 'New', owner: 'Pieta',
+    title: 'Composition date should be optional'
+};
 
 class IssueRow extends React.Component {
     render() {
         const issue = this.props.issue;
+        console.log(issue);
         return (
             <tr>
                 <td>{issue.id}</td>
@@ -34,8 +39,32 @@ class IssueFilter extends React.Component {
 }
 
 class IssueTable extends React.Component {
+    constructor() {
+        super();
+        this.state = { issues: [] }; //This is a direct assignment but it is set to empty list, only to be set in loadData later.
+
+        setTimeout(() => {
+            this.createIssue(sampleIssues)
+        }, 2000);
+
+    }
+    loadData() {
+        setTimeout(() => {
+            this.setState({ issues: initialIssues });
+        }, 500);
+    }
+    componentDidMount() {
+        this.loadData();
+    }
+    createIssue(issue) {
+        issue.id = this.state.issues.length+1;
+        issue.created = new Date();
+        const newIssueList = this.state.issues.slice();
+        newIssueList.push(issue);
+        this.setState({ issues: newIssueList });
+    }
     render() {
-        const issueRows = issues.map(issue => <IssueRow key={issue.id} issue={issue}/>);
+        const issueRows = this.state.issues.map(issue => <IssueRow key={issue.id} issue={issue}/>);
         return(
             <table className="bordered-table">
                 <thead>

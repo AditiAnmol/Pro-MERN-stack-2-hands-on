@@ -22,7 +22,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-var issues = [{
+var initialIssues = [{
   id: 1,
   status: 'New',
   owner: 'Raven',
@@ -39,6 +39,11 @@ var issues = [{
   due: new Date('2021-02-26'),
   title: 'Missing bottom border on panel'
 }];
+var sampleIssues = {
+  status: 'New',
+  owner: 'Pieta',
+  title: 'Composition date should be optional'
+};
 
 var IssueRow = /*#__PURE__*/function (_React$Component) {
   _inherits(IssueRow, _React$Component);
@@ -55,6 +60,7 @@ var IssueRow = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       var issue = this.props.issue;
+      console.log(issue);
       return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, issue.id), /*#__PURE__*/React.createElement("td", null, issue.status), /*#__PURE__*/React.createElement("td", null, issue.owner), /*#__PURE__*/React.createElement("td", null, issue.effort), /*#__PURE__*/React.createElement("td", null, issue.created.toDateString()), /*#__PURE__*/React.createElement("td", null, issue.due ? issue.due.toDateString() : ''), /*#__PURE__*/React.createElement("td", null, issue.title));
     }
   }]);
@@ -89,15 +95,52 @@ var IssueTable = /*#__PURE__*/function (_React$Component3) {
   var _super3 = _createSuper(IssueTable);
 
   function IssueTable() {
+    var _this;
+
     _classCallCheck(this, IssueTable);
 
-    return _super3.apply(this, arguments);
+    _this = _super3.call(this);
+    _this.state = {
+      issues: []
+    }; //This is a direct assignment but it is set to empty list, only to be set in loadData later.
+
+    setTimeout(function () {
+      _this.createIssue(sampleIssues);
+    }, 2000);
+    return _this;
   }
 
   _createClass(IssueTable, [{
+    key: "loadData",
+    value: function loadData() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        _this2.setState({
+          issues: initialIssues
+        });
+      }, 500);
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadData();
+    }
+  }, {
+    key: "createIssue",
+    value: function createIssue(issue) {
+      issue.id = this.state.issues.length + 1;
+      issue.created = new Date();
+      var newIssueList = this.state.issues.slice();
+      newIssueList.push(issue);
+      this.setState({
+        issues: newIssueList
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      var issueRows = issues.map(function (issue) {
+      var issueRows = this.state.issues.map(function (issue) {
         return /*#__PURE__*/React.createElement(IssueRow, {
           key: issue.id,
           issue: issue

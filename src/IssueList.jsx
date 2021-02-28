@@ -1,12 +1,11 @@
-const initialIssues = [
-    {id: 1, status: 'New', owner: 'Raven', effort: 5, 
-    created: new Date('2021-02-12'), due: undefined, 
-    title: 'Error on console when clicking Add'},
-    {id: 2, status: 'Assigned', owner: 'Eddie', effort: 14, 
-    created: new Date('2021-02-12'), due: new Date('2021-02-26'), 
-    title: 'Missing bottom border on panel'},
-];
+const dateRegex = new RegExp('^\\d\\d\\d\\d-\\d\\d-\\d\\d');
 
+function jsonDateReviewer(key, value) {
+    if(dateRegex.test(value)){
+        return new Date(value);
+    }
+    return value;
+}
 
 function IssueRow(props) {
     const issue = props.issue;
@@ -65,7 +64,7 @@ class IssueAdd extends React.Component {
         const issue = {
             owner: form.owner.value,
             title: form.title.value,
-            status: 'New',
+            due: new Date(new Date().getTime() + 1000*60*60*24*10),
         }
         this.props.createIssue(issue);
         form.owner.value = "";
@@ -91,21 +90,50 @@ class IssueList extends React.Component {
         this.state = { issues: [] };
         this.createIssue = this.createIssue.bind(this);
     }
-    loadData() {
-        setTimeout(() => {
-            this.setState({ issues: initialIssues });
-        }, 500);
+    async loadData() {
+        const query =  `query {
+            issueList {
+                id title status owner
+                created effort due
+            }
+        }
+        `;
+
+        const respose = await fetch('/graphql',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query })
+        });
+
+        const body = await respose.text();
+        const result = JSON.parse(body, jsonDateReviewer);
+        this.setState({ issues: result.data.issueList });
+
     }
     componentDidMount() {
         this.loadData();
     }
-    createIssue(issue) {
-        issue.id = this.state.issues.length+1;
+    async createIssue(issue) {
+        /*issue.id = this.state.issues.length+1;
         issue.created = new Date();
         const newIssueList = this.state.issues.slice();
         newIssueList.push(issue);
-        this.setState({ issues: newIssueList });
+        this.setState({ issues: newIssueList });*/
+
+        const query = `mutation issueAdd($issue: IssueInputs!) {
+                issueAdd(issue: $issue){
+                    id
+                }
+            }`;
+
+        const respose = await fetch('/graphql', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, variables: {issue} })
+        });
+        this.loadData();
     }
+    
     render() {
         return(
             <React.Fragment>

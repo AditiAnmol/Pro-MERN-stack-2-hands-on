@@ -31,9 +31,10 @@ const GraphQLDate = new GraphQLScalarType({
 		return isNaN(dateValue) ? undefined : dateValue;
 	},
 	parseLiteral(ast) {
-		if(ast.kind == Kind.STRING)
+		if(ast.kind == Kind.STRING){
 			const value = new Date(ast.value);
 			return  isNaN(value)? undefined : value;
+		}
 	}
 });
 

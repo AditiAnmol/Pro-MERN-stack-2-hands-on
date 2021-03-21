@@ -99,7 +99,7 @@ class IssueList extends React.Component {
         }
         `;
 
-        const respose = await fetch('/graphql',{
+        const respose = await fetch(window.ENV.UI_API_ENDPOINT,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query })
@@ -120,7 +120,7 @@ class IssueList extends React.Component {
                 }
             }`;
 
-        const respose = await fetch('/graphql', {
+        const respose = await fetch(window.ENV.UI_API_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query, variables: {issue} })

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const express = require('express');
 
@@ -7,7 +8,9 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { MongoClient } = require('mongodb');
 
-const url = 'mongodb+srv://aditi:mongo123@self-learn-cluster.df4am.mongodb.net/issuetracker?retryWrites=true';
+const url = process.env.DB_URL || 'mongodb+srv://aditi:mongo123@self-learn-cluster.df4am.mongodb.net/issuetracker?retryWrites=true';
+
+const port = process.env.API_SERVER_PORT || 3000;
 
 let aboutMessage = "Issue Tracker API v1.0";
 let db;
@@ -92,7 +95,7 @@ async function graphQLFetch(query, variables = {}) {
 }
 
 const server = new ApolloServer({
-	typeDefs: fs.readFileSync('./server/schema.graphql', 'utf-8'),
+	typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
 	resolvers,
 	formatError: error => {
 		console.log(error);
@@ -110,15 +113,16 @@ async function connectToDb() {
 
 const app = express();
 
-app.use(express.static('public'));
+const enableCORS = (process.env.ENABLE_CORS || 'true') == 'true';
+console.log('CORS setting: ', enableCORS);
 
-server.applyMiddleware({ app, path: '/graphql' });
+server.applyMiddleware({ app, path: '/graphql', cors: enableCORS });
 
 (async function() {
 	try{
 		await connectToDb();
-		app.listen(3000, function(){
-			console.log('App started on port 3000');
+		app.listen(port, function(){
+			console.log(`API server started on port ${port}`);
 		});
 	} catch(err) {
 		console.log('ERROR: ', err);

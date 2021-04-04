@@ -5,6 +5,7 @@
     },
     "rules": {
         "linebreak-style": 0,
+        "import/extensions": [ "error", "always", { "ignorePackages": true } ],
         "react/prop-types": "off"
     }
 }

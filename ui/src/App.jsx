@@ -7,3 +7,7 @@ import IssueList from './IssueList.jsx';
 
 const element = <IssueList />;
 ReactDOM.render(element, document.getElementById('issuetracker'));
+
+if (module.hot) {
+  module.hot.accept();
+}

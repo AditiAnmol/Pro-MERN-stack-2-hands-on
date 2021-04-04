@@ -1,4 +1,5 @@
-/* globals React */
+import React from 'react';
+
 // eslint-disable-next-line react/prefer-stateless-function
 class IssueFilter extends React.Component {
   render() {

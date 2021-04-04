@@ -1,6 +1,7 @@
-/* globals React */
+
 /* eslint "react/jsx-no-undef": "off" */
 
+import React from 'react';
 import graphQLFetch from './graphQLFetch.js';
 import IssueFilter from './IssueFilter.jsx';
 import IssueTable from './IssueTable.jsx';

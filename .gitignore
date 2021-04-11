@@ -1,2 +1,5 @@
 node_modules
 .vscode
+package-lock.json
+ui/public/*.js
+ui/public/*.map

@@ -1,7 +1,7 @@
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Button, Glyphicon, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
-import { Link, NavLink, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 
 const IssueRow = withRouter(({
